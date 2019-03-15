@@ -64,12 +64,12 @@ DEFAULT_REQUEST_HEADERS = {
 #}
 
 #登陆数据库的配置
-# MYSQL_HOST = '192.168.5.12'
-# MYSQL_USER = 'root'
-# MYSQL_PASSWD = 'vm123'
-# MYSQL_DBNAME = 'icnvvd'
-#MYSQL_CHARSET = 'utf8'
-#MYSQL_PORT = '3306'
+MYSQL_HOST = '127.0.0.1'
+MYSQL_USER = 'root'
+MYSQL_PASSWD = 'root'
+MYSQL_DBNAME = 'cnnvd'
+MYSQL_CHARSET = 'utf8'
+MYSQL_PORT = 3306
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html

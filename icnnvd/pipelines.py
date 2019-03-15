@@ -6,7 +6,7 @@
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 import json
 import pymysql
-
+import icnnvd.settings as st
 
 # 导入json本地
 class IcnnvdPipeline(object):
@@ -29,13 +29,13 @@ class Icnnvd_Pipeline(object):
     def __init__(self):
         self.db = pymysql.connect(
             # host='192.168.5.12',
-            host='127.0.0.1',
-            user='root',
+            host=st.MYSQL_HOST,
+            user=st.MYSQL_USER,
             # passwd='vm123',
-            passwd='root',
-            db='new_semf',
-            port=3306,
-            charset='utf8',
+            passwd=st.MYSQL_PASSWD,
+            db=st.MYSQL_DBNAME,
+            port=st.MYSQL_PORT,
+            charset=st.MYSQL_CHARSET,
             cursorclass=pymysql.cursors.DictCursor)
 
     def process_item(self, item, spider):

@@ -8,6 +8,7 @@ class MycnnvdSpider(scrapy.Spider):
     allowed_domains = ['www.cnnvd.org.cn']
     baseURL = "http://www.cnnvd.org.cn/web/vulnerability/querylist.tag?pageno="
     offset = 0
+    end = 12299
     start_urls = [baseURL+str(offset)]
 
     def parse(self, response):
@@ -28,7 +29,7 @@ class MycnnvdSpider(scrapy.Spider):
             # 返回每个item的值给管道，同时继续执行后面的代码
             # yield item
 
-        if self.offset < 3:
+        if self.offset < end:
             self.offset += 1
             url = self.baseURL + str(self.offset)
             yield scrapy.Request(url, callback=self.parse)
