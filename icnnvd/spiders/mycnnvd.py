@@ -3,7 +3,7 @@ import scrapy
 import re
 import requests
 from icnnvd.items import IcnnvdItem
-
+from scrapy import log
 
 class MycnnvdSpider(scrapy.Spider):
     name = 'mycnnvd'
@@ -23,13 +23,17 @@ class MycnnvdSpider(scrapy.Spider):
         js = sel.xpath('/html/body/div[4]/div/div[1]/div/div[3]/a[9]/@onclick')
         obj = re.findall(r'pageno=(\d+)&', js.extract()[0])
         self.end = int(obj[0]) if obj else 0
+        log.msg('total %d pages!' % self.end, level=log.INFO)
 
     def parse(self, response):
         node_list = response.xpath("//div[@class='list_list']/ul/li")
         for node in node_list:
             item = IcnnvdItem()
-            item['url'] = self.index_url + node.xpath("./div[1]/a/@href").extract()[0]
-            item['cnnvd'] = node.xpath("./div[1]/p/a/text()").extract()[0]
+            try:
+                item['url'] = self.index_url + node.xpath("./div[1]/a/@href").extract()[0]
+                item['cnnvd'] = node.xpath("./div[1]/p/a/text()").extract()[0]
+            except IndexError:
+                continue
             yield scrapy.Request(item['url'], meta={'item': item}, callback=self.detail_parse)
         if self.offset < self.end:
             self.offset += 1
@@ -39,7 +43,7 @@ class MycnnvdSpider(scrapy.Spider):
     def detail_parse(self, response):
         # 接受上一级的爬去数据
         item = response.meta['item']
-        xpaths = {
+        XPATH = {
             'name': '//div[@class="detail_xq w770"]/h2/text()',
             'cve': '//ul/li[3]/a[@rel]/text()',
             'grade': '//ul/li[2]/a[@style="color:#4095cc;cursor:pointer;"]/text()',
@@ -56,11 +60,11 @@ class MycnnvdSpider(scrapy.Spider):
             'patch_url': '//*[@id="pat"]/li/div[1]/a/@href'
         }
         ext_s = self._extract_str_by_xpath
-        for key in xpaths:
+        for key in XPATH:
             if key == 'ref_urls':
-                item[key] = ext_s(response, xpaths[key], self.url_pattern, '###')
+                item[key] = ext_s(response, XPATH[key], self.url_pattern, '###')
             else:
-                item[key] = ext_s(response, xpaths[key])
+                item[key] = ext_s(response, XPATH[key])
         if item['patch_url']:
             item['patch_url'] = self.index_url + item['patch_url']
         yield item
@@ -72,4 +76,4 @@ class MycnnvdSpider(scrapy.Spider):
         else:
             data_list = sel.extract()
             data_list = map(lambda x: x.strip(), data_list)
-        return connector.join(data_list).replace('\'', r'\'')
+        return connector.join(data_list)

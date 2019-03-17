@@ -64,13 +64,18 @@ DEFAULT_REQUEST_HEADERS = {
 #    'scrapy.extensions.telnet.TelnetConsole': None,
 #}
 
-#登陆数据库的配置
-MYSQL_HOST = '127.0.0.1'
-MYSQL_USER = 'root'
-MYSQL_PASSWD = 'root'
-MYSQL_DBNAME = 'cnnvd'
-MYSQL_CHARSET = 'utf8'
-MYSQL_PORT = 3306
+# 登陆数据库的配置
+DB_CONFIG = {
+    'DRIVER': 'mysql',
+    'HOST': '127.0.0.1',
+    'USER': 'root',
+    'PASSWD': 'root',
+    'DBNAME': 'cnnvd',
+    'CHARSET': 'utf8',
+    'TABLENAME': 'vulninfo',
+    'PORT': 3306
+    }
+
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html

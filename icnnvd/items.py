@@ -6,6 +6,29 @@
 # https://doc.scrapy.org/en/latest/topics/items.html
 
 import scrapy
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, String
+from icnnvd.settings import DB_CONFIG
+
+
+class IcnnvdVulnInfo(declarative_base()):
+    __tablename__ = DB_CONFIG['TABLENAME']
+    url = Column(String(255))
+    cnnvd = Column(String(127))
+    name = Column(String(127))
+    cve = Column(String(127), primary_key=True)
+    grade = Column(String(31))
+    vuln_type = Column(String(31))
+    threat_type = Column(String(31))
+    release_time = Column(String(31))
+    update_time = Column(String(31))
+    vuln_desc = Column(String(1023))
+    vuln_bulletin = Column(String(1023))
+    ref_urls = Column(String(1023))
+    source = Column(String(255))
+    vendor = Column(String(127))
+    affected = Column(String(255))
+    patch_url = Column(String(255))
 
 
 class IcnnvdItem(scrapy.Item):
