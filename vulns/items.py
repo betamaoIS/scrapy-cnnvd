@@ -6,32 +6,15 @@
 # https://doc.scrapy.org/en/latest/topics/items.html
 
 import scrapy
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, String
-from icnnvd.settings import DB_CONFIG
 
 
-class IcnnvdVulnInfo(declarative_base()):
-    __tablename__ = DB_CONFIG['TABLENAME']
-    url = Column(String(255))
-    cnnvd = Column(String(127))
-    name = Column(String(127))
-    cve = Column(String(127), primary_key=True)
-    grade = Column(String(31))
-    vuln_type = Column(String(31))
-    threat_type = Column(String(31))
-    release_time = Column(String(31))
-    update_time = Column(String(31))
-    vuln_desc = Column(String(1023))
-    vuln_bulletin = Column(String(1023))
-    ref_urls = Column(String(1023))
-    source = Column(String(255))
-    vendor = Column(String(127))
-    affected = Column(String(255))
-    patch_url = Column(String(255))
+class VulnsItem(scrapy.Item):
+    # define the fields for your item here like:
+    # name = scrapy.Field()
+    pass
 
 
-class IcnnvdItem(scrapy.Item):
+class CnnvdItem(scrapy.Item):
     url = scrapy.Field()  # 该条目cnnvd页面url
     cnnvd = scrapy.Field()
     name = scrapy.Field()  # 漏洞名称
@@ -49,4 +32,15 @@ class IcnnvdItem(scrapy.Item):
     affected = scrapy.Field()  # 受影响的对象
     patch_url = scrapy.Field()  # 补丁的地址 暂时为cnnvd的补丁页，以后视情况解析
 
-    pass
+class BugtraqItem(scrapy.Item):
+    bid = scrapy.Field()
+    name = scrapy.Field()
+    vuln_class = scrapy.Field()
+    cve = scrapy.Field()
+    is_remote = scrapy.Field()
+    is_local = scrapy.Field()
+    publish_date = scrapy.Field()
+    update_date = scrapy.Field()
+    credit = scrapy.Field()
+    effection = scrapy.Field()
+    exclude_effection = scrapy.Field()
